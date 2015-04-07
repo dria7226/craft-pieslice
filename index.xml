@@ -1,0 +1,44 @@
+<craft>
+	<parameter name="x" type="int" default="0"/>
+	<parameter name="y" type="int" default="0"/>
+	<parameter name="radius" type="int" default="1"/>
+	<parameter name="height" type="int" default="1"/>
+	<parameter name="angleOne" type="int" default="0"/>
+	<parameter name="angleTwo" type="int" default="45"/>
+	<parameter name="increment" type="int" default="10"/>
+	<parameter name="clockwise" type="int" default="1"/>
+	<script type="text/openjscad">
+		function main(params)
+		{
+			//vars
+			var x = params.x || 0;
+			var y = params.y || 0;
+			var r = params.radius || 1;
+			var h = params.height || 1;
+			var a1 = params.angleOne || 0;
+			a1 = a1 + 720;
+			var a2 = params.angleTwo || 45;
+			a2 = a2 + 720;
+			var inc = params.increment || 10;
+			inc*=-1;
+			var clockwise = params.clockwise || 1;
+			//----------------
+
+		    var test = function(){return (i > a2+inc);}
+
+		    if(clockwise) {inc*=-1; test = function(){return (i < a2+inc);} };
+		    var result = [[x,y]];
+
+		    //generate points clockwise
+		    for(var i = a1; test(); i+=inc)
+		    {
+		    	console.log(i);
+		        result[result.length] = [r*Math.cos(i*Math.PI/180)+x,r*Math.sin(i*Math.PI/180)+y];
+		    }
+
+		    var path = CAG.fromPoints(result);
+
+		    return linear_extrude({height: h}, path);
+		}
+	</script>
+</craft>
